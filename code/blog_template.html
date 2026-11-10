@@ -1,0 +1,136 @@
+<!-- wp:paragraph -->
+<p><em>Britain's hilltops are dotted with squat concrete pillars, each with a brass fitting on top. They were built to measure the country, and the rule was simple: every pillar must be able to see its neighbours. I mapped all {{counts.kinds.pillar|int}} of them, and checked that rule against a modern terrain model. Using the stations' surveyed heights, it still holds for {{vis.o1.pc|f0}}% of the neighbouring primary stations.</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://maps.tristanhotham.com/trig-network/">Explore the interactive version</a></div>
+<!-- /wp:button -->
+<!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://doi.org/10.5281/zenodo.24104644">Read the paper</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+
+<!-- wp:paragraph -->
+<p>If you have walked up a hill in Britain, you have probably touched one. A trig pillar is about four feet (1.2 m) tall, usually concrete, with a brass mounting on top where a surveyor once screwed a theodolite. Walkers lean on them, eat sandwiches by them and tick them off. They were built for the Retriangulation of Great Britain, the Ordnance Survey's project to measure the country again from scratch, whose first pillar went up in 1936 and which gave us the National Grid.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>The OS still publishes the list of its old triangulation stations. It has {{data.records|int}} rows. Some stations have several rows (a pillar, a bolt under it, a mark fixed again later), so I grouped them into {{counts.stations|int}} stations, of which {{counts.kinds.pillar|int}} are pillars. The rest are bolts and blocks in the ground and "intersected" points: church spires, chimneys, flagstaffs and lighthouses that surveyors sighted on but never stood on.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">A net inside a net</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The network was built in orders, like a fishing net with a finer net tied inside it. {{counts.orders.1|int}} primary stations carry the big triangles. The middle distance from a primary station to its nearest primary neighbour is {{geom.o1_all.nnd_med|f1}} km. Secondary pillars fill those triangles at {{geom.o2_pillar.nnd_med|f1}} km, third-order pillars at {{geom.o3_pillar.nnd_med|f1}} km, and fourth-order marks fill in the towns.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>It is also strikingly even. A standard measure of spacing gives 1 for points scattered at random and more for evenly spaced ones: the primary stations score {{geom.o1_all.ce_R|f2}}, while random points on the same land score between {{geom.o1_all.ce_csr_lo|f2}} and {{geom.o1_all.ce_csr_hi|f2}}. Join neighbouring primaries into triangles and {{tri.well_pc|f0}}% have no angle smaller than 30 degrees, the sort of fat, well-behaved triangle a surveyor wants, against {{tri.csr_well_pc|f0}}% for random points.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_spacing.png|Histograms of the distance from each trig station to its nearest neighbour of the same order: primary stations about 20 km apart, secondary pillars about 7 km and third-order pillars about 4 km, with dot charts showing each order is more evenly spaced than random points|How far apart the stations of each order are, and how much more evenly spaced they are than random points.}}
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Built in a generation</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Nearly all of it went up in one burst. Of the {{counts.kinds.pillar|int}} pillars, {{build.pillars_1936_1962|int}} ({{build.pc|f0}}%) have a commissioning date between 1936 and 1962. There is a little pre-war build, mostly primary stations, then a gap: nothing in the list is dated 1940 or 1941. After the war the work resumed, and the busiest year in the list is {{build.pillars_peak_year|raw}}, with {{build.pillars_peak_n|int}} pillars. Many primary stations carry the date of their whole block of the network, so treat single years loosely.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_build.png|Bar chart of trig pillars by commissioning year: a small pre-war build of primary stations from 1936 to 1939, nothing in 1940 or 1941, a large post-war build peaking in the late 1940s and 1950s, and very little after 1962|Trig pillars by the commissioning year in the Ordnance Survey list, coloured by order.}}
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Can the hills still see each other?</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Here is the part I most wanted to test. Triangulation only works if each station can see its neighbours: the surveyor sights the theodolite on a lamp or signal on the next hill. So if the station list is right, and a modern terrain model is good enough, neighbouring stations should be in sight of each other over that model.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>I drew a line from each primary station to its nearest primary neighbour and checked it over Terrain Tiles, an open elevation model, allowing for the curve of the Earth and for the slight bending of light in the air. I put each end 1.5 m above the surveyed height of the station, roughly where the instrument sat. I wrote down the test, and what result would count against it, before running it.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Of {{vis.o1.n|int}} lines, {{vis.o1.k|int}} are clear: {{vis.o1.pc|f0}}%. Secondary pillars do just as well ({{vis.o2.pc|f0}}%), and third-order pillars nearly as well ({{vis.o3.pc|f0}}%). Is that just because Britain is open country? No. Move both ends of each line 1 km in a random direction and only {{plc.shift1km.pc|f0}}% are clear. Pick random pairs of points on land at the same distances and only {{plc.random.pc|f0}}% are.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_map.png|Map of Great Britain with the 347 primary trig stations as dots, joined to their nearest primary neighbours by blue lines where the terrain model shows a clear line of sight and red where it is blocked; almost all are blue, and the few red lines are mostly in eastern England, with others on Lundy and near Dundee|The primary network. Blue lines are clear over the terrain model, red ones blocked.}}
+
+<!-- wp:pullquote -->
+<figure class="wp-block-pullquote"><blockquote><p>Lines placed at random mostly fail. The real ones mostly pass.</p></blockquote></figure>
+<!-- /wp:pullquote -->
+
+<!-- wp:paragraph -->
+<p>The {{fail.n|int}} lines that fail are the best bit. {{fail.structure_named|int}} of them involve a lighthouse, a cathedral, an observatory, a castle or a water tower whose height the list does not record, so my test puts the observer on the ground instead of up the tower. {{fail.pillar_pillar|int}} are pillar to pillar, in flat Norfolk, Suffolk and Lincolnshire, blocked by a few metres. Every one of them touches a station where, according to the record, the surveyors put up a steel observing tower, often about 30 m tall, to see further. Add a 30 m tower, and all {{fail.tower_pairs|int}} clear. That leaves one I cannot explain: West Hills to Buddon near Dundee, where Buddon is a ground mark with no recorded height and the model puts a ridge in the way.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_profiles.png|Three terrain profiles: Fair Isle to Foula clear across the sea; Crimplesham to Walpole St Peters in Norfolk blocked by a few metres at ground level but clear from 30 m towers; West Hills to Buddon near Dundee blocked by rising ground|Three lines of sight, drawn the way the test sees them.}}
+
+<!-- wp:paragraph -->
+<p>One honest warning. The terrain model at this scale rounds off hilltops: at the pillars it sits a median {{dem.bias|abs0}} m below the surveyed height, and on Ben Nevis {{dem.ben_nevis_gap|f0}} m below. If I use the model's own heights at the ends instead of the surveyed ones, only {{rob.demonly.pc|f0}}% of the primary lines are clear. That is still far above the random lines, but it shows how much the old survey's own heights matter: the {{vis.o1.pc|f0}}% depends on them.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Pillars outlast spires and bolts</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The list flags stations known to be destroyed. {{headline.pillars_destroyed|int}} of the {{counts.kinds.pillar|int}} pillars are flagged ({{surv.kind.pillar.pc|f1}}%). Intersected stations fare much worse ({{surv.kind.intersected.pc|f0}}%) and ground marks worse still ({{surv.kind.surface.pc|f0}}%): bolts in walls and blocks under fields disappear with new buildings, roads and ploughs. Even allowing for the kind of station, its order, region and age, stations below 100 m are more often lost than upland ones. Scotland's pillars are the least often flagged, at {{surv.region.Scotland.pil_pc|f1}}%.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_survival.png|Bar chart showing 6% of pillars, 26% of intersected stations such as spires and 36% of ground marks flagged destroyed, and a dot chart of the share of pillars flagged destroyed by region, lowest in Scotland and highest in Yorkshire and the Humber|Stations flagged destroyed in the Ordnance Survey list, by kind and, for pillars, by region.}}
+
+<!-- wp:paragraph -->
+<p>The OS no longer maintains this list, so "not destroyed" really means "not known to be destroyed". The walkers of TrigpointingUK, who log visits, record more losses than the OS list does.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">How I did this</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The station list comes from the Ordnance Survey, packaged by Phil Mike Jones in the trigpoints R package. I grouped rows with the same station code within 100 m, and called a station a pillar if any of its rows is one. The terrain is Terrain Tiles at zoom 9, where each pixel is about 190 m across. For each line I sampled the terrain every 100 m, lowered it for the Earth's curve less refraction, ignored the first and last 250 m, and called the line clear if nothing rose above it. I checked the result with no refraction and with more, with a finer profile, with two neighbours instead of one and leaving out each region in turn: it stays between {{rob.range_lo|f0}}% and {{rob.range_hi|f0}}%.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>What this cannot say: the terrain model has no trees or buildings; the list does not record which lines were actually observed, so nearest neighbours stand in for them; and the destroyed flag is out of date. The St Kilda stations sit just outside the terrain tiles. The paper has the full method, every check and every failing line.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://maps.tristanhotham.com/trig-network/">Explore the interactive version</a></div>
+<!-- /wp:button -->
+<!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://doi.org/10.5281/zenodo.24104644">Read the paper</a></div>
+<!-- /wp:button -->
+<!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://github.com/Tristan-Hotham/trig-network">Data and code</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Notes and sources</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>Ordnance Survey legacy triangulation station list. Contains OS data © Crown copyright and database right 2018, used under the Open Government Licence v3.0. Packaged in the trigpoints R package by Phil Mike Jones.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li>Terrain Tiles on AWS Open Data (Mapzen): SRTM and GMTED2010 courtesy of the U.S. Geological Survey; EU-DEM produced using Copernicus data and information funded by the European Union; ETOPO1 from NOAA.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li>Steel observing towers: TrigpointingUK wiki, "Bilby towers", citing the Ordnance Survey's History of the Retriangulation of Great Britain (1967) and T. Owen and E. Pilbeam, Ordnance Survey: Map Makers to Britain since 1791 (1992). OpenStreetMap survey points © OpenStreetMap contributors (ODbL). Region boundaries: ONS (OGL v3.0). Base map: OpenFreeMap.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li>Further reading: W. A. Seymour (ed.), A History of the Ordnance Survey (1980); R. Hewitt, Map of a Nation (2010); M. Greaves, "OSTN02", Survey Review (2004).</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li>I wrote the text, with drafting and editing assistance from Claude (Anthropic), which also helped prepare the analysis code. I reviewed and checked all text and results.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->

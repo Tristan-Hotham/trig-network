@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The trig pillar network: how Britain was measured | {{counts.kinds.pillar|int}} pillars mapped</title>
+<meta name="description" content="Every Ordnance Survey triangulation station in Great Britain: when the {{counts.kinds.pillar|int}} trig pillars were built, how far apart they stand, how many are recorded destroyed, and whether neighbouring stations can still see each other over a terrain model.">
+<meta property="og:title" content="The trig pillar network: how Britain was measured">
+<meta property="og:description" content="{{vis.o1.k|int}} of {{vis.o1.n|int}} neighbouring primary trig stations are in sight of each other over a modern terrain model. Random pairs of points at the same distances: {{plc.random.pc|f0}}%.">
+<meta property="og:image" content="https://maps.tristanhotham.com/trig-network/header.png">
+<meta property="og:url" content="https://maps.tristanhotham.com/trig-network/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<style>
+{{CSS}}
+.keys .sw{display:inline-block;width:18px;height:3px;border-radius:2px}
+.maplibregl-popup-content{max-height:min(56vh,460px);overflow:auto}
+.keys .ring{width:10px;height:10px;border-radius:50%;border:2px solid #8E8576;background:transparent}
+</style></head>
+<body>
+<div class="topbar">
+  <a class="tb-name" href="#mapWrap">The trig pillar network</a>
+  <span class="tb-k">Data study · 2026</span>
+  <nav class="tb-links"><a href="#essay">About</a><button class="theme" id="theme" aria-label="Toggle dark mode">◐</button><a href="https://doi.org/10.5281/zenodo.24104644">Paper</a><a class="x" href="{{REPO}}">Data and code</a></nav>
+</div>
+<div class="mapband">
+  <div class="pane" id="mapWrap" data-fullscreen-map role="application" aria-label="Map of Ordnance Survey triangulation stations in Great Britain coloured by order, with lines to their nearest same-order neighbours">
+    <div id="map"></div>
+    <div class="nojs" id="nojs">Loading the map. It needs JavaScript and WebGL.</div>
+    <div class="cartouche" id="cartouche">
+      <button class="ct-toggle" id="ctToggle" aria-expanded="true">The trig pillar network ▾</button>
+      <button class="ct-fold" id="ctFold" title="Fold the title" aria-label="Fold the title">▴</button>
+      <div class="ct-body">
+        <div class="kicker"><b>Data study</b><span>2026</span></div>
+        <h1>The trig pillar network: <span class="a">how Britain was measured</span></h1>
+        <p class="dek">Every station in the Ordnance Survey's list for Great Britain, {{counts.stations|int}} in all, coloured by order. Lines join each primary station, and each secondary and third-order pillar, to its nearest neighbour of the same order: blue where the terrain model says they can see each other, red where it says they cannot. Drag the timeline; tap a dot or a line.</p>
+        <div class="byline">{{BYLINE}}</div>
+      </div>
+    </div>
+    <div class="ov-top">
+      <div class="srch"><input type="search" id="q" placeholder="Find a trig point" aria-label="Find a trig point by name" autocomplete="off"><ul class="sug" id="sug" role="listbox"></ul></div>
+      <div class="chips"><button class="chip" data-f="all" aria-pressed="true">All</button><button class="chip" data-f="ok" aria-pressed="false">Surviving</button><button class="chip" data-f="gone" aria-pressed="false">Destroyed</button><button class="chip lyr" id="lyrBtn" aria-expanded="false" aria-controls="lp">Layers</button></div>
+    </div>
+    <div class="lp" id="lp" role="dialog" aria-label="Map layers">
+      <h4>Layers</h4>
+      <label><input type="checkbox" id="ly1" checked> Primary stations (order 1)</label>
+      <label><input type="checkbox" id="ly2" checked> Secondary (order 2)</label>
+      <label><input type="checkbox" id="ly3" checked> Third order</label>
+      <label><input type="checkbox" id="ly4"> Fourth order and later marks</label>
+      <label><input type="checkbox" id="lyNP"> Non-pillar stations (spires, bolts)</label>
+      <label><input type="checkbox" id="lyL" checked> Nearest-neighbour lines tested</label>
+      <label><input type="checkbox" id="lyD"> Primary triangle net (all sides tested)</label>
+      <label><input type="checkbox" id="lyB" checked> Base map labels</label>
+    </div>
+    <div class="keys" id="keys"><b>Station order</b>
+      <div class="row"><span class="dot" style="background:#B4442E"></span>primary (1)</div>
+      <div class="row"><span class="dot" style="background:#C98A2B"></span>secondary (2)</div>
+      <div class="row"><span class="dot" style="background:#2F6A9E"></span>third order (3)</div>
+      <div class="row"><span class="dot" style="background:#8E8576"></span>fourth order and later</div>
+      <div class="row kx"><span class="ring"></span>recorded destroyed (hollow)</div>
+      <div class="row"><span class="sw" style="background:#2F6A9E"></span>in sight over the terrain model</div>
+      <div class="row"><span class="sw" style="background:#B4442E"></span>blocked in the model</div>
+      <div class="row kx" style="color:#6E604E">Pillars shown; spires, bolts and other marks in Layers</div>
+      <div class="row kx" style="color:#6E604E">Great Britain only (the OS list has no Northern Ireland)</div></div>
+    <div class="tl" id="tl"><button id="play" aria-label="Play the timeline">Play</button><label for="yr" class="sr" style="position:absolute;left:-9999px">Show stations commissioned up to year</label><input type="range" id="yr" min="1936" max="1995" value="1995" step="1"><b id="yrLab">1936 to 1995</b></div>
+  </div>
+</div>
+<div class="wrap" id="essay">
+<p style="margin-top:6px">On hilltops all over Britain stand squat concrete pillars about four feet (1.2 m) high, each with a brass mounting on top. They were the Ordnance Survey's survey stations for the Retriangulation of Great Britain, whose first pillar went up in 1936 and which gave Britain its National Grid. The OS list of its old triangulation stations holds {{counts.stations|int}} stations in Great Britain, {{counts.kinds.pillar|int}} of them pillars. I mapped every one and asked four questions: how the network was laid out, when it was built, how much has been lost, and whether a modern open terrain model can still see the rule the surveyors worked to, that a station must be in sight of its neighbours.</p>
+<div class="byline">{{BYLINE}} · Data: Ordnance Survey legacy triangulation station list (Contains OS data © Crown copyright and database right 2018, Open Government Licence v3.0, via the trigpoints R package), Terrain Tiles (AWS Open Data; Mapzen), OpenStreetMap contributors (ODbL) · Base map: OpenFreeMap Positron</div>
+<div class="stats">
+<div class="stat"><b>{{vis.o1.pc|f0}}%</b><span>of nearest-neighbour primary lines clear over the terrain model ({{vis.o1.k|int}} of {{vis.o1.n|int}})</span></div>
+<div class="stat"><b>{{plc.random.pc|f0}}%</b><span>of random pairs of points on land at the same distances</span></div>
+<div class="stat"><b>{{build.pc|f0}}%</b><span>of pillars dated 1936 to 1962</span></div>
+<div class="stat"><b>{{headline.pillars_destroyed|int}}</b><span>of {{counts.kinds.pillar|int}} pillars recorded destroyed ({{headline.pillars_destroyed_pc|f1}}%)</span></div>
+</div>
+
+<h2><span class="n">01 · The mesh</span>A net inside a net</h2>
+<p>The network was built in orders. {{counts.orders.1|int}} primary stations carry the big triangles; secondary and third-order stations fill them in, and fourth-order marks (often bolts on buildings, church spires and flagstaffs) fill in the towns. The median distance from a primary station to its nearest primary neighbour is {{geom.o1_all.nnd_med|f1}} km (95% interval {{geom.o1_all.nnd_lo|f1}} to {{geom.o1_all.nnd_hi|f1}}). For secondary pillars it is {{geom.o2_pillar.nnd_med|f1}} km, and for third-order pillars {{geom.o3_pillar.nnd_med|f1}} km.</p>
+<p>The stations are also far more evenly spaced than chance. A Clark and Evans ratio measures this: 1 for random points, higher for more even spacing. The primaries score {{geom.o1_all.ce_R|f2}}, while random points scattered on the same land score {{geom.o1_all.ce_csr_lo|f2}} to {{geom.o1_all.ce_csr_hi|f2}}. Joining neighbouring primaries into triangles, {{tri.well_pc|f0}}% of the {{tri.n|int}} triangles have every angle at least 30 degrees, the kind of well-shaped triangle surveyors aim for, against {{tri.csr_well_pc|f0}}% for random points.</p>
+<div class="figure"><img src="img/spacing.jpg" alt="Histograms of the distance to the nearest station of the same order: primary stations about 20 km apart, secondary pillars about 7 km, third-order pillars about 4 km; and dot charts showing each order more evenly spaced than random points" loading="lazy"><p class="src">Nearest same-order neighbour by order, and evenness compared with random points on the same land.</p></div>
+
+<h2><span class="n">02 · The build</span>One generation of concrete</h2>
+<p>The first pillar was used in 1936. Of the {{counts.kinds.pillar|int}} pillars, {{build.pillars_1936_1962|int}} ({{build.pc|f0}}%) carry a commissioning date between 1936 and 1962, the years of the Retriangulation. The busiest year in the list is {{build.pillars_peak_year|raw}}, with {{build.pillars_peak_n|int}} pillars. Work stopped for the war: no station in the list is dated 1940 or 1941. Many primary stations carry the date of their whole block of the network rather than their own, so single years should be read loosely.</p>
+<div class="figure"><img src="img/build.jpg" alt="Bar chart of trig pillars by commissioning year from 1936 to 1995: a small pre-war build of primaries, a gap in 1940 and 1941, a peak in the late 1940s and 1950s, and almost nothing after 1962" loading="lazy"><p class="src">Pillars by commissioning year in the OS station list, coloured by order.</p></div>
+
+<h2><span class="n">03 · Line of sight</span>Do the hills still see each other?</h2>
+<p>Triangulation needs every station to see its neighbours. So I drew a line from each primary station to its nearest primary neighbour and checked it over a modern open terrain model, Terrain Tiles at zoom 9 (pixels about 190 m across), with the Earth's curvature and the usual allowance for light bending in the air. The ends sit at the surveyed height of the station plus 1.5 m for the instrument. I wrote down the test, and what would count against it, before running it.</p>
+<p>Of {{vis.o1.n|int}} nearest-neighbour primary lines, {{vis.o1.k|int}} ({{vis.o1.pc|f1}}%, 95% interval {{vis.o1.lo|f1}} to {{vis.o1.hi|f1}}%) are clear. Every side of the primary triangle net up to 80 km: {{vis.o1_delaunay.pc|f1}}%. Secondary pillars: {{vis.o2.pc|f1}}%; third-order pillars: {{vis.o3.pc|f1}}%. For comparison, the same lines with both ends moved 1 km in a random direction are clear only {{plc.shift1km.pc|f0}}% of the time, and random pairs of points on land at the same distances {{plc.random.pc|f0}}% of the time. That fits stations sited for what they could see.</p>
+<div class="figure"><img src="img/vis.jpg" alt="Dot chart: about 95% of primary, 97% of secondary and 92% of third-order nearest-neighbour lines are clear, against 17% when the ends are moved 1 km and 11% for random land pairs" loading="lazy"><p class="src">Share of lines with a clear line of sight, with 95% intervals.</p></div>
+<p>The {{fail.n|int}} primary lines that fail are telling. {{fail.structure_named|int}} involve a cathedral, an observatory, a lighthouse, a water tower or a castle whose height is not recorded in the list, so the test puts the observer on the ground rather than up the tower. {{fail.pillar_pillar|int}} are pillar to pillar in flat country in <a data-go="Crimplesham">Norfolk</a>, <a data-go="Crown Corner">Suffolk</a> and <a data-go="Dexthorpe">Lincolnshire</a>, blocked by a few metres. Every one of those {{fail.tower_pairs|int}} has an end at a station where the surveyors put up a steel observing tower (often about 30 m tall), and with a 30 m tower added, {{fail.tower_pairs_clear_with_30m|int}} of {{fail.tower_pairs|int}} clear.</p>
+<div class="figure"><img src="img/profiles.jpg" alt="Three terrain profiles: Fair Isle to Foula clear over the sea; Crimplesham to Walpole St Peters blocked by a few metres but clear from 30 m towers; West Hills to Buddon blocked by rising ground" loading="lazy"><p class="src">Three lines as the test sees them. The terrain is lowered for the curvature of the Earth less refraction.</p></div>
+<p>The result does not hang on the details: with no refraction allowance, with more, with a finer profile, with the two nearest neighbours instead of one, or leaving out one region at a time, the share stays between {{rob.range_lo|f1}}% and {{rob.range_hi|f1}}%. With no instrument height at all it is {{rob.instr0.pc|f0}}%; from a 5 m signal, {{rob.instr5.pc|f0}}%. One choice matters a lot. The zoom 9 terrain rounds off summits: at pillars it sits a median {{dem.bias|abs0}} m below the surveyed height. Using the terrain model's own heights at the ends, only {{rob.demonly.pc|f0}}% of primary lines are clear, though that is still far above the placebo lines. So the {{vis.o1.pc|f0}}% figure rests on the surveyed heights. The last failure, <a data-go="Buddon">West Hills to Buddon</a> near Dundee, a ground mark with no recorded height behind rising ground, I cannot explain.</p>
+
+<h2><span class="n">04 · What survives</span>Pillars outlast spires and bolts</h2>
+<p>The OS list flags stations known to be destroyed. {{surv.kind.pillar.pc|f1}}% of pillars are flagged, against {{surv.kind.intersected.pc|f0}}% of spires, towers, masts and other intersected stations, and {{surv.kind.surface.pc|f0}}% of ground marks such as bolts and buried blocks. In a model that also allows for order, region, decade and whether the station is in the lowlands, intersected stations had {{surv.model.intersected.or|f1}} times the odds of being flagged destroyed (95% interval {{surv.model.intersected.lo|f1}} to {{surv.model.intersected.hi|f1}}) and ground marks {{surv.model.surface.or|f1}} times; stations below 100 m had {{surv.model.lowland.or|f2}} times the odds of upland ones. By region, Scotland's pillars are the least often flagged ({{surv.region.Scotland.pil_pc|f1}}%).</p>
+<div class="figure"><img src="img/survival.jpg" alt="Bar chart: 6% of pillars, 26% of intersected stations and 36% of ground marks flagged destroyed; and a dot chart of pillars flagged destroyed by region, lowest in Scotland" loading="lazy"><p class="src">Share flagged destroyed, by kind of station and, for pillars, by region.</p></div>
+<p>OS no longer maintains the list, so "not destroyed" means only "not known to be destroyed". As a rough check, {{osm.surv_50.pc|f0}}% of the surviving pillars have a survey point mapped in OpenStreetMap within 50 m, against {{osm.dest_50.pc|f1}}% of the destroyed ones.</p>
+
+<h2><span class="n">05 · How I did this</span>Stations, lines and a terrain model</h2>
+<p><b>Stations.</b> The OS legacy list, as packaged in the trigpoints R package, has {{data.records|int}} rows. A station can have several rows (a pillar, a bolt beneath it, a refixed mark), so I grouped rows with the same station code within 100 m into {{counts.stations|int}} stations, and called a station a pillar if any of its rows is one.</p>
+<p><b>Lines of sight.</b> For each line I sampled the terrain every 100 m, lowered it for the curvature of the Earth less refraction (coefficient 0.13), ignored the first and last 250 m, and called the line clear if no sample rose above it. The placebos use the same terrain and the ground height plus 1.5 m at each end.</p>
+<p><b>What this cannot say.</b> The terrain model has no trees or buildings and rounds off hilltops; the OS list does not record which lines were actually observed, so nearest neighbours stand in for them; and the destroyed flag is out of date. The St Kilda stations lie just outside the terrain tiles, so the one line to St Kilda is treated as open sea, which it mostly is.</p>
+<details><summary>Sources and licences</summary>
+<ul class="plain">
+<li>Ordnance Survey legacy triangulation station list. Contains OS data © Crown copyright and database right 2018, used under the Open Government Licence v3.0. Packaged by Phil Mike Jones in the trigpoints R package (package code MIT licence).</li>
+<li>Terrain Tiles on AWS Open Data (Mapzen; Tilezen). Sources include SRTM and GMTED2010 (courtesy of the U.S. Geological Survey), EU-DEM (produced using Copernicus data and information funded by the European Union), ETOPO1 (NOAA).</li>
+<li>OpenStreetMap survey points, © OpenStreetMap contributors, ODbL, retrieved 2026 through QLever.</li>
+<li>Region boundaries: Office for National Statistics (Open Government Licence v3.0).</li>
+<li>Steel observing tower stations: TrigpointingUK wiki, "Bilby towers", citing the OS history of the Retriangulation (1967).</li>
+<li>Base map: OpenFreeMap Positron style (OpenStreetMap, ODbL). MapLibre GL JS 4.7.1 (BSD 3-Clause).</li>
+<li>Text, figures and derived data CC BY 4.0, except that OS station fields remain under the Open Government Licence v3.0 (contains OS data © Crown copyright) and OSM-derived fields are ODbL; code MIT.</li>
+</ul></details>
+<div class="cta"><a class="p" href="https://doi.org/10.5281/zenodo.24104644">Read the paper</a><a href="{{REPO}}">Data and code</a><a href="https://blog.tristanhotham.com/2026/10/31/trig-network/">Blog post</a></div>
+<footer>
+<p>Dr Tristan Hotham, Independent researcher. ORCID <a href="https://orcid.org/0000-0003-4931-9349">0000-0003-4931-9349</a>.</p>
+<p>Cite as: Hotham, T. (2026) The trig pillar network: geometry, construction, survival and intervisibility of the Ordnance Survey Retriangulation of Great Britain. Zenodo. <a href="https://doi.org/10.5281/zenodo.24104644">10.5281/zenodo.24104644</a></p>
+<p>Code: <a href="{{REPO}}">github.com/Tristan-Hotham/trig-network</a> (MIT). Text, figures and data CC BY 4.0 (OS station fields OGL v3.0, contains OS data © Crown copyright and database right; OSM fields ODbL).</p>
+<p>{{AI}}</p>
+</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="js/page.js?v={{VERSION}}"></script>
+{{FULLSCREEN}}
+<script src="https://maps.tristanhotham.com/assets/site-nav.js" defer></script>
+</body>
+</html>
