@@ -1,0 +1,17 @@
+{
+  "title": "The trig pillar network: how Britain was measured",
+  "slug": "trig-network",
+  "excerpt": "I mapped all 6,573 Ordnance Survey trig pillars and tested the rule they were built to: every station must see its neighbours. Using the surveyed station heights over a modern terrain model, 95% of neighbouring primary stations still can; random lines of the same length, 11%.",
+  "seo_description": "Britain's 6,573 trig pillars mapped: how far apart, when built, what survives, and can neighbours still see each other?",
+  "tags": [
+    "maps",
+    "data visualisation",
+    "Ordnance Survey",
+    "trig points",
+    "surveying",
+    "history of science",
+    "landscape",
+    "terrain"
+  ],
+  "header_alt": "Title card on cream paper reading 'The trig pillar network' beside a map of Great Britain's primary triangulation stations joined by blue lines of sight, with a few red blocked lines in eastern England."
+}
